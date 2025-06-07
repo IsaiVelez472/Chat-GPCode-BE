@@ -10,7 +10,7 @@ class Application < ApplicationRecord
   validates :user_id, uniqueness: { scope: :vacancy_id, message: "has already applied to this vacancy" }
   
   # Constantes para los estados posibles
-  STATUSES = %w[pending review interview selected rejected withdrawn].freeze
+  STATUSES = %w[pending approved rejected].freeze
   
   # Validación para asegurar que el estado sea uno de los permitidos
   validates :status, inclusion: { in: STATUSES }

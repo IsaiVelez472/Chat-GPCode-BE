@@ -11,7 +11,7 @@ class ApplicationController < ActionController::API
   
   # Manejar errores de validación con traducción
   def handle_validation_errors(record)
-    errores = error_translator.translate_errors(record.errors)
+    errores = error_translator.translate(record.errors)
     render json: { errores: errores }, status: :unprocessable_entity
   end
   

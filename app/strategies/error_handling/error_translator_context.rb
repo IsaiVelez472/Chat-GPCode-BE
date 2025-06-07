@@ -10,6 +10,10 @@ module ErrorHandling
     end
     
     def translate_errors(errors)
+      translate(errors)
+    end
+    
+    def translate(errors)
       @strategy.translate(errors)
     end
   end
