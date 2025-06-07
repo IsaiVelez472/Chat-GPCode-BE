@@ -1,3 +1,5 @@
+require_relative 'base_decorator'
+
 module Decorators
   class VoluntarioDecorator < BaseDecorator
     def nombre_completo

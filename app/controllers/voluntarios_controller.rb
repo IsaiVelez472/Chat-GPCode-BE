@@ -1,3 +1,5 @@
+require_relative '../decorators/voluntario_decorator'
+
 class VoluntariosController < ApplicationController
   # GET /voluntarios
   def index
