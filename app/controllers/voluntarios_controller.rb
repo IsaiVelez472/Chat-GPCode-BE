@@ -2,7 +2,9 @@ class VoluntariosController < ApplicationController
   # GET /voluntarios
   def index
     @voluntarios = Voluntario.all
-    render json: @voluntarios, status: :ok
+    decorated_voluntarios = Decorators::VoluntarioDecorator.decorate_collection(@voluntarios)
+    
+    render json: decorated_voluntarios.map(&:como_json_basico), status: :ok
   end
 
   # GET /voluntarios/documento/:document_type/:document_number
@@ -10,7 +12,12 @@ class VoluntariosController < ApplicationController
     @voluntario = Voluntario.find_by(document_type: params[:document_type], document_number: params[:document_number])
     
     if @voluntario
-      render json: @voluntario, status: :ok
+      decorated_voluntario = Decorators::VoluntarioDecorator.decorate(@voluntario)
+      render json: {
+        voluntario: decorated_voluntario.como_json_basico,
+        contacto: decorated_voluntario.informacion_contacto,
+        edad: decorated_voluntario.edad
+      }, status: :ok
     else
       handle_record_not_found(nil, 'Voluntario no encontrado')
     end
@@ -56,7 +63,10 @@ class VoluntariosController < ApplicationController
     
     # Verificar si el voluntario existe y la contraseña es correcta
     if @voluntario&.authenticate(login_params[:password])
-      render json: @voluntario, status: :ok
+      decorated_voluntario = Decorators::VoluntarioDecorator.decorate(@voluntario)
+      render json: {
+        user_info: decorated_voluntario.como_json_basico
+      }, status: :ok
     else
       handle_error('Credenciales inválidas', :unauthorized)
     end
