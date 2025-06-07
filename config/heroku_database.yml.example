@@ -1,0 +1,16 @@
+# Ejemplo de configuración para Heroku Postgres
+# Copia este archivo a config/heroku_database.yml y reemplaza con tus credenciales reales
+
+# Variables de entorno para desarrollo local
+# Estas variables serán utilizadas en desarrollo para conectarse a tu base de datos Heroku Postgres
+
+# URL de conexión a la base de datos Heroku Postgres
+# Formato: postgres://username:password@host:port/database_name
+DATABASE_URL: postgres://mock_username:mock_password@mock_host:5432/mock_database
+
+# Otras variables que podrías necesitar
+POSTGRES_USER: mock_username
+POSTGRES_PASSWORD: mock_password
+POSTGRES_HOST: mock_host
+POSTGRES_PORT: 5432
+POSTGRES_DATABASE: mock_database
