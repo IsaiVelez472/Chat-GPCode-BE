@@ -10,7 +10,7 @@ class ProyectosController < ApplicationController
     @proyecto = Proyecto.find(params[:id])
     render json: @proyecto
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Proyecto no encontrado' }, status: :not_found
+    handle_record_not_found(nil, 'Proyecto no encontrado')
   end
   
   # GET /proyectos/empresa/:company_id
@@ -26,7 +26,7 @@ class ProyectosController < ApplicationController
     if @proyecto.save
       render json: @proyecto, status: :created
     else
-      render json: { errors: @proyecto.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@proyecto)
     end
   end
 
@@ -37,10 +37,10 @@ class ProyectosController < ApplicationController
     if @proyecto.update(proyecto_params)
       render json: @proyecto
     else
-      render json: { errors: @proyecto.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@proyecto)
     end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Proyecto no encontrado' }, status: :not_found
+    handle_record_not_found(nil, 'Proyecto no encontrado')
   end
 
   # DELETE /proyectos/:id
@@ -49,7 +49,7 @@ class ProyectosController < ApplicationController
     @proyecto.destroy
     head :no_content
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Proyecto no encontrado' }, status: :not_found
+    handle_record_not_found(nil, 'Proyecto no encontrado')
   end
 
   private

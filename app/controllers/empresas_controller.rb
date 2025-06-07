@@ -10,7 +10,7 @@ class EmpresasController < ApplicationController
     @empresa = Empresa.find(params[:id])
     render json: @empresa, status: :ok
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Empresa no encontrada' }, status: :not_found
+    handle_record_not_found(nil, 'Empresa no encontrada')
   end
 
   # GET /empresas/nit/:nit
@@ -20,7 +20,7 @@ class EmpresasController < ApplicationController
     if @empresa
       render json: @empresa, status: :ok
     else
-      render json: { error: 'Empresa no encontrada' }, status: :not_found
+      handle_record_not_found(nil, 'Empresa no encontrada')
     end
   end
 
@@ -31,7 +31,7 @@ class EmpresasController < ApplicationController
     if @empresa.save
       render json: @empresa, status: :created
     else
-      render json: { errors: @empresa.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@empresa)
     end
   end
 
@@ -42,10 +42,10 @@ class EmpresasController < ApplicationController
     if @empresa.update(empresa_update_params)
       render json: @empresa, status: :ok
     else
-      render json: { errors: @empresa.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@empresa)
     end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Empresa no encontrada' }, status: :not_found
+    handle_record_not_found(nil, 'Empresa no encontrada')
   end
 
   # POST /empresas/login
@@ -66,7 +66,7 @@ class EmpresasController < ApplicationController
     if @empresa&.authenticate(login_params[:password])
       render json: @empresa, status: :ok
     else
-      render json: { error: 'Credenciales inválidas' }, status: :unauthorized
+      handle_error('Credenciales inválidas', :unauthorized)
     end
   end
 

@@ -12,7 +12,7 @@ class VoluntariosController < ApplicationController
     if @voluntario
       render json: @voluntario, status: :ok
     else
-      render json: { error: 'Voluntario no encontrado' }, status: :not_found
+      handle_record_not_found(nil, 'Voluntario no encontrado')
     end
   end
 
@@ -23,7 +23,7 @@ class VoluntariosController < ApplicationController
     if @voluntario.save
       render json: @voluntario, status: :created
     else
-      render json: { errors: @voluntario.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@voluntario)
     end
   end
 
@@ -34,10 +34,10 @@ class VoluntariosController < ApplicationController
     if @voluntario.update(voluntario_update_params)
       render json: @voluntario, status: :ok
     else
-      render json: { errors: @voluntario.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@voluntario)
     end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Voluntario no encontrado' }, status: :not_found
+    handle_record_not_found(nil, 'Voluntario no encontrado')
   end
 
   # POST /voluntarios/login
@@ -58,7 +58,7 @@ class VoluntariosController < ApplicationController
     if @voluntario&.authenticate(login_params[:password])
       render json: @voluntario, status: :ok
     else
-      render json: { error: 'Credenciales inválidas' }, status: :unauthorized
+      handle_error('Credenciales inválidas', :unauthorized)
     end
   end
 

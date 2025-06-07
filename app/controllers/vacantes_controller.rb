@@ -66,7 +66,7 @@ class VacantesController < ApplicationController
     
     render json: vacante_data
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Vacante no encontrada' }, status: :not_found
+    handle_record_not_found(nil, 'Vacante no encontrada')
   end
   
   # GET /vacantes/empresa/:company_id
@@ -112,7 +112,7 @@ class VacantesController < ApplicationController
     if @vacante.save
       render json: @vacante, status: :created
     else
-      render json: { errors: @vacante.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@vacante)
     end
   end
 
@@ -123,10 +123,10 @@ class VacantesController < ApplicationController
     if @vacante.update(vacante_params)
       render json: @vacante
     else
-      render json: { errors: @vacante.errors.full_messages }, status: :unprocessable_entity
+      handle_validation_errors(@vacante)
     end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Vacante no encontrada' }, status: :not_found
+    handle_record_not_found(nil, 'Vacante no encontrada')
   end
 
   # DELETE /vacantes/:id
@@ -135,7 +135,7 @@ class VacantesController < ApplicationController
     @vacante.destroy
     head :no_content
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Vacante no encontrada' }, status: :not_found
+    handle_record_not_found(nil, 'Vacante no encontrada')
   end
 
   private
